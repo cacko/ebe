@@ -24,3 +24,28 @@ tasks:
       - git add .  || true
       - git commit -am "$(curl -s https://commit.cacko.net/index.txt)" || true
       - git push || true
+
+  build:
+    desc: build
+    cmds:
+      - rm -rf dist/*
+      - mamba run -n {{.PROJECT}} python setup.py bdist_wheel
+
+  install:
+    desc: install
+    cmds:
+      - task: build
+      - pip uninstall -y {{.PROJECT}}
+      - find dist -type f -name "*.whl" | head -n 1 | xargs mamba run --live-stream -n base pip install
+
+  publish:
+    desc: publish
+    cmds:
+      - scp dist/* muzak:/var/www/pypi/packages/{{.PROJECT}}
+
+  deploy:
+    desc: all
+    cmds:
+      - task: build
+      - task: publish
+      - task: push
