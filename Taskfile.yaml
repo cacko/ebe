@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PROJECT: eba
+
+tasks:
+  default:
+    desc: run eba
+    silent: true
+    cmds:
+      - mamba run --live-stream -n {{.PROJECT}} python -m eba {{.CLI_ARGS}}
+
+  export:
+    desc: export env
+    cmds:
+      - mamba env export --no-builds  -n {{.PROJECT}} > environment.yml
+
+
+  push:
+    desc: commit and pushes current changes
+    cmds:
+      - git add .  || true
+      - git commit -am "$(curl -s https://commit.cacko.net/index.txt)" || true
+      - git push || true
