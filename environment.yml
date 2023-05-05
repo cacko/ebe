@@ -43,6 +43,7 @@ dependencies:
       - corefile==0.1.2
       - corelog==0.0.8
       - fs==2.4.16
+      - humanfriendly==10.0
       - markdown-it-py==2.2.0
       - mdurl==0.1.2
       - progressor==1.0.16

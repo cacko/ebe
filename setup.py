@@ -41,7 +41,7 @@ setup(
       "pandas==2.0.1",
       "progressor==1.0.16",
       "click==8.1.3",
-      
+      "humanfriendly==10.0"
     ],
     setup_requires=["wheel"],
     python_requires=">=3.10",
