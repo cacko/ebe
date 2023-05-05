@@ -1,6 +1,6 @@
 import click
 from pathlib import Path
-from eba.merge import merge, MergeParams
+from eba.df.merge import Merge
 from typing import Optional
 
 
@@ -26,9 +26,9 @@ def cli_params(
     right_path = Path(right)
     assert left_path.exists()
     assert right_path.exists()
-    merge_result = merge(
-        MergeParams(path=left_path, columns=left_columns),
-        MergeParams(path=right_path, columns=right_columns)
+    merge_result = Merge.execute(
+        Merge.params(path=left_path, columns=left_columns),
+        Merge.params(path=right_path, columns=right_columns)
     )
     if not output:
         output_path = Path(
