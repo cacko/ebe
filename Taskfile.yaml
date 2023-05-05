@@ -3,14 +3,15 @@
 version: '3'
 
 vars:
-  PROJECT: eba
+  PROJECT: ebe
 
 tasks:
   default:
     desc: run eba
     silent: true
+    dir: src/
     cmds:
-      - mamba run --live-stream -n {{.PROJECT}} python -m eba {{.CLI_ARGS}}
+      - mamba run --live-stream -n {{.PROJECT}} python -m {{.PROJECT}} {{.CLI_ARGS}}
 
   export:
     desc: export env

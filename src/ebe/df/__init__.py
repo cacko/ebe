@@ -1,8 +1,11 @@
 import io
+from click import style
 from pandas import DataFrame
 from typing import Any, Optional
 from rich.console import Console, ConsoleOptions, RenderResult
+from rich.segment import Segment
 from pydantic import BaseModel, Field
+from rich.style import Style
 
 
 class Info(BaseModel):
@@ -11,21 +14,28 @@ class Info(BaseModel):
     max_cols: int | None = Field(default=False)
     memory_usage: bool | str | None = Field(default=False)
     show_counts: bool | None = Field(default=True)
-    icon: Optional[str]
-    title: Optional[str]
+    icon: Optional[str] = Field(default=None)
+    title: Optional[str] = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
 
-    def __rich_console__(self, console: Console, options: ConsoleOptions) -> RenderResult:
+    def __rich_console__(
+        self,
+        console: Console,
+        options: ConsoleOptions
+    ) -> RenderResult:
+        txt = []
         if self.icon:
-            yield self.icon
+            txt.append(self.icon)
         if self.title:
-            yield f"[b]{self.title}[/b]"
+            txt.append(f"[b]{self.title}[/b]")
+        if len(txt):
+            yield " ".join(txt)
         yield self.info
         yield "\n"
 
-    @property
+    @ property
     def info(self) -> str:
         buff = io.StringIO()
         self.df.info(
@@ -43,7 +53,7 @@ class OperationMeta(type):
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return super().__call__(*args, **kwds)
 
-    @property
+    @ property
     def params(cls):
         return cls.CustomParams
 

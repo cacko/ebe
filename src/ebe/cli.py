@@ -1,6 +1,6 @@
 import click
 from pathlib import Path
-from eba.df.merge import Merge
+from ebe.df.merge import Merge
 from typing import Optional
 
 
