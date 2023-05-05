@@ -4,6 +4,7 @@ from typing import Any, Optional
 from rich.console import Console, ConsoleOptions, RenderResult
 from pydantic import BaseModel, Field
 
+
 class Info(BaseModel):
     df: DataFrame
     verbose: bool | None = Field(default=False)
@@ -13,7 +14,6 @@ class Info(BaseModel):
     icon: Optional[str]
     title: Optional[str]
 
-    
     class Config:
         arbitrary_types_allowed = True
 
