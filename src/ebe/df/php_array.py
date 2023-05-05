@@ -2,6 +2,7 @@ import pandas as pd
 from pathlib import Path
 from pydantic import BaseModel
 from progressor import Spinner
+from build.lib.ebe.df import php_array
 from ebe.df import Info, OperationMeta
 from typing import Optional
 
@@ -23,7 +24,10 @@ class PhpArray(object, metaclass=OperationMeta):
                 return frame
 
     def exec(self, *params: CustomParams, **options) -> pd.DataFrame:
-        left, right = params
+        param = params[0]
+        df = param.df()
+        dff = df[[param.key, *param.values]]
+        print(dff.head())
         # dfp = left.df()
         # dfb = right.df()
         # with Spinner(f"Merging by {','.join(left.columns)}"

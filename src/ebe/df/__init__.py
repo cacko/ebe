@@ -1,11 +1,8 @@
 import io
-from click import style
 from pandas import DataFrame
 from typing import Any, Optional
 from rich.console import Console, ConsoleOptions, RenderResult
-from rich.segment import Segment
 from pydantic import BaseModel, Field
-from rich.style import Style
 
 
 class Info(BaseModel):
