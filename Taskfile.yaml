@@ -49,4 +49,5 @@ tasks:
     cmds:
       - task: build
       - task: publish
+      - task: install
       - task: push

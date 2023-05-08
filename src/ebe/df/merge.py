@@ -2,10 +2,14 @@ import pandas as pd
 from pathlib import Path
 from pydantic import BaseModel
 from progressor import Spinner
-from ebe.df import Info, OperationMeta
+from ebe.df import Info, Operation
+from ebe.ui.models import TaskIcon
 
 
-class Merge(object, metaclass=OperationMeta):
+class Merge(object, metaclass=Operation):
+
+    summary = "Merge csv files"
+    task_icon = TaskIcon.MERGE
 
     class CustomParams(BaseModel):
         path: Path

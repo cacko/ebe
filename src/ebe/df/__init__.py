@@ -4,6 +4,8 @@ from typing import Any, Optional
 from rich.console import Console, ConsoleOptions, RenderResult
 from pydantic import BaseModel, Field
 
+from ebe.ui.models import TaskIcon
+
 
 class Info(BaseModel):
     df: DataFrame
@@ -45,14 +47,21 @@ class Info(BaseModel):
         return buff.getvalue()
 
 
-class OperationMeta(type):
+class Operation(type):
+
+    summary: str = ""
+    task_icon: TaskIcon = TaskIcon.OFF
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return super().__call__(*args, **kwds)
 
-    @ property
+    @property
     def params(cls):
         return cls.CustomParams
+
+    @property
+    def name(cls):
+        return cls.__name__
 
     def execute(cls, *args, **kwds):
         return cls().exec(*args, **kwds)

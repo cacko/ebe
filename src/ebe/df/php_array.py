@@ -2,12 +2,16 @@ import pandas as pd
 from pathlib import Path
 from pydantic import BaseModel
 from progressor import Spinner
-from build.lib.ebe.df import php_array
-from ebe.df import Info, OperationMeta
+from ebe.df import Info, Operation
 from typing import Optional
+from ebe.core.php import to_php
+from ebe.ui.models import TaskIcon
 
 
-class PhpArray(object, metaclass=OperationMeta):
+class PhpArray(object, metaclass=Operation):
+
+    summary = "Create PHP Array from csv"
+    task_icon = TaskIcon.PHPARRAY
 
     class CustomParams(BaseModel):
         path: Path
@@ -23,23 +27,47 @@ class PhpArray(object, metaclass=OperationMeta):
                 ))
                 return frame
 
-    def exec(self, *params: CustomParams, **options) -> pd.DataFrame:
+        @property
+        def source_values(self) -> list[str]:
+            return [
+                x.split(":")[0] for x in self.values
+            ]
+
+        @property
+        def is_assoc(self) -> bool:
+            return any([":" in x for x in self.values])
+
+        @property
+        def dest_values(self) -> list[str]:
+            return [
+                x.split(":")[-1] for x in self.values
+            ]
+
+    @staticmethod
+    def to_assoc(df, param) -> str:
+        res = {}
+        for ind in df.index:
+            key = df[param.key][ind]
+            res[key] = {
+                k: df[v][ind]
+                for v, k in
+                zip(param.source_values, param.dest_values)
+            }
+        return to_php(res)
+
+    @staticmethod
+    def to_map(df, param) -> str:
+        res = {}
+        for ind in df.index:
+            key = df[param.key][ind]
+            res[key] = [df[k][ind] for k in param.source_values]
+        return to_php(res)
+
+    def exec(self, *params: CustomParams, **options) -> str:
         param = params[0]
         df = param.df()
-        dff = df[[param.key, *param.values]]
+        dff = df[[param.key, *param.source_values]]
         print(dff.head())
-        # dfp = left.df()
-        # dfb = right.df()
-        # with Spinner(f"Merging by {','.join(left.columns)}"
-        #              f" / {','.join(right.columns)}"
-        #              ) as progress:
-        #     res = dfp.merge(
-        #         dfb,
-        #         left_on=left.columns,
-        #         right_on=right.columns
-        #     )
-        #     progress.console.print(Info(
-        #         title="merged result",
-        #         df=res
-        #     ))
-        #     return res
+        if param.is_assoc:
+            return PhpArray.to_assoc(dff, param)
+        return PhpArray.to_map(dff, param)
