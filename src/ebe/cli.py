@@ -8,6 +8,7 @@ from pyfiglet import Figlet
 from ebe.df.php_array import PhpArray
 from ebe.ui.items import MenuItem, MergeOperationItem, TaskItem
 from ebe.ui.menu import Menu
+from ebe.version import __version__
 
 
 def banner(txt: str, color: str = "bright_green"):
@@ -46,7 +47,7 @@ def quit():
 def main_menu(ctx: click.Context):
     try:
         click.clear()
-        banner(txt="eBe", color="bright_blue")
+        banner(txt=f"eBe {__version__}", color="bright_blue")
         menu_items = [
             MergeOperationItem(text="Merge", obj=Merge, cmd=cli_merge),
             MenuItem(text="PhpArray", obj=PhpArray, cmd=cli_phparray),

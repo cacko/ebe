@@ -6,14 +6,14 @@ from setuptools import find_packages, setup
 from setuptools.dist import Distribution as _Distribution
 
 __name__ = "ebe"
-vp = Path(__file__).parent / "version.txt"
-__version__ = semver.VersionInfo.parse(vp.read_text().strip())
+vp = Path(__file__).parent / "src" / __name__ / "version.py"
+__version__ = semver.VersionInfo.parse(vp.read_text().strip().split('"')[1])
 
 
 def version():
     if len(sys.argv) > 1 and sys.argv[1] == "bdist_wheel":
         nv = f"{__version__.bump_patch()}"
-        vp.write_text(f'{nv}')
+        vp.write_text(f'__version__ = "{nv}"\n')
         return nv
     return f"{__version__}"
 
