@@ -107,12 +107,14 @@ def cli_merge(
 @click.argument("csv")
 @click.option("-v", "--values", multiple=True)
 @click.option("-k", '--key', type=str)
+@click.option("-c", '--comment', type=str)
 @click.option("-o", "--output")
 def cli_phparray(
     ctx: click.Context,
     csv: str,
     values: list[str],
     key: Optional[str] = None,
+    comment: Optional[str] = None,
     output: Optional[str] = None
 ):
     csv_path = Path(csv)
@@ -121,7 +123,8 @@ def cli_phparray(
         PhpArray.params(
             path=csv_path,
             values=values,
-            key=key
+            key=key,
+            comment=comment
         ),
     )
     if not output:

@@ -17,6 +17,7 @@ class PhpArray(object, metaclass=Operation):
         path: Path
         values: list[str]
         key: Optional[str]
+        comment: Optional[str]
 
         def df(self) -> pd.DataFrame:
             with Spinner(f"Loading {self.path.name}") as progress:
@@ -44,8 +45,9 @@ class PhpArray(object, metaclass=Operation):
             ]
 
     @staticmethod
-    def to_assoc(df, param) -> str:
+    def to_assoc(df, param: CustomParams) -> str:
         res = {}
+        comments = {}
         for ind in df.index:
             key = df[param.key][ind]
             res[key] = {
@@ -53,20 +55,26 @@ class PhpArray(object, metaclass=Operation):
                 for v, k in
                 zip(param.source_values, param.dest_values)
             }
-        return to_php(res)
+            if param.comment:
+                comments[key] = df[param.comment][ind]
+        return to_php(res, comments=comments)
 
     @staticmethod
     def to_map(df, param) -> str:
         res = {}
+        comments = {}
         for ind in df.index:
             key = df[param.key][ind]
             res[key] = [df[k][ind] for k in param.source_values]
-        return to_php(res)
+            if param.comment:
+                comments[key] = df[param.comment][ind]
+        return to_php(res, comments=comments)
 
     def exec(self, *params: CustomParams, **options) -> str:
         param = params[0]
         df = param.df()
-        dff = df[[param.key, *param.source_values]]
+        dff = df[filter(
+            None, [param.key, *param.source_values, param.comment])]
         print(dff.head())
         if param.is_assoc:
             return PhpArray.to_assoc(dff, param)

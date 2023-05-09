@@ -1,12 +1,14 @@
 from typing import Any
 
 
-def to_php(source: Any, level=0, ident="\t") -> str:
+def to_php(source: Any, level=0, ident="\t", comments={}) -> str:
     match source:
         case dict(source):
             res = f"{ident*level}[\n"
             level += 1
             for k, v in source.items():
+                if comment := comments.get(k):
+                    res += f"{ident*level}#{comment}\n"
                 res += f"{ident*level}'{k}' => "
                 res += to_php(v, level)
             level -= 1
