@@ -11,7 +11,7 @@ __version__ = semver.VersionInfo.parse(vp.read_text().strip().split('"')[1])
 
 
 def version():
-    if len(sys.argv) > 1 and sys.argv[1] == "bdist_wheel":
+    if len(sys.argv) > 1 and sys.argv[1] >= "bdist_wheel":
         nv = f"{__version__.bump_patch()}"
         vp.write_text(f'__version__ = "{nv}"\n')
         return nv
@@ -32,16 +32,16 @@ setup(
     url=f"http://pypi.cacko.net/simple/{__name__}/",
     description="whatever",
     install_requires=[
-        "appdirs==1.4.4",
-        "autopep8==2.0.2",
-        "corefile==0.1.2",
-        "corelog==0.0.8",
-        "pydantic==1.10.7",
-        "semver==3.0.0",
-        "pandas==2.0.1",
-        "progressor==1.0.16",
-        "click==8.1.3",
-        "humanfriendly==10.0",
+        "appdirs>=1.4.4",
+        "autopep8>=2.0.2",
+        "corefile>=0.1.2",
+        "corelog>=0.0.8",
+        "pydantic>=1.10.7",
+        "semver>=3.0.0",
+        "pandas>=2.0.1",
+        "progressor>=1.0.16",
+        "click>=8.1.3",
+        "humanfriendly>=10.0",
         "pyfiglet",
         "questionary>=1.10.0",
         "emoji>=2.2.0"
